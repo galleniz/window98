@@ -1,4 +1,4 @@
-
+var htmlCodeMatch = /<[^>]*>/g;
 function getQueryParams() {
     const params = new URLSearchParams(window.location.search);
     return {
@@ -13,7 +13,9 @@ function getQueryParams() {
             text: params.get('alerttext') || '¡Hola, mundo!',
             username: params.get('alertusername') || 'Usuario',
             usernameColor: params.get('alertusernamecolor') || 'rgb(255, 123, 0)',
-        }
+        },
+        content: params.get('content') || '',
+        contentishtml: params.get('contentishtml') || htmlCodeMatch.test(params.get("content")) ? "true" : "false" || 'false',
     };
 }
 
@@ -46,6 +48,13 @@ function initializeWindow() {
         titlebar.style.background = `linear-gradient(to right, ${params.colorA}, ${params.colorB})`;
     } else {
         titlebar.style.background = params.colorA;
+    }
+    if (params.content) {
+        if (params.contentishtml === "true") {
+            content.innerHTML = params.content;
+        } else {
+            content.textContent = params.content;
+        }
     }
 
     // var is_alert_page = window.location.pathname.includes('alert/');
